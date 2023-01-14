@@ -1,15 +1,18 @@
+import express from 'express';
 import EnvioEmail from './enviaEmail.js';
-import a from 'readline-sync';
+import bodyParser from 'body-parser';
 
-let destinatario = a.question('para quem voce quer enviar um email? \r\n');
+const app = express();
 
-let assunto = a.question('qual assunto ? \r\n');
+app.use(bodyParser.json())
 
-let mensagem = a.question('qual a mensagem ? \r\n');
- 
-let anexo = a.question('qual o anexo? \r\n');
+app.post('/enviar-email', (req, res) => {
+    const {destinatario , assunto , mensagem , anexo  } = req.body
+    // console.log(req.body.destinatario)
+    EnvioEmail(destinatario , assunto , mensagem , anexo );
+    res.status(200).send({ message: 'Email enviado com sucesso' });
+});
 
-
-
-EnvioEmail(destinatario,assunto,mensagem,anexo);
-
+app.listen(3000, () => {
+    console.log('API iniciada na porta 3000');
+});
